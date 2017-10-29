@@ -8,11 +8,10 @@ set(PROJECT_VERSION_MINOR 1)
 set(PROJECT_VERSION_PATCH 0)
 set(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
-include(CTest)
-
 set(KALMAN_CXX_FLAGS "-std=c++11")
 
-option(KALMAN_BUILD_EXAMPLES "Build the Kalman examples" ON)
+option(KALMAN_BUILD_EXAMPLES "Build the Kalman examples" OFF)
+option(KALMAN_BUILD_TESTING "Build the Kalman testing" OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
@@ -60,23 +59,24 @@ if(KALMAN_BUILD_EXAMPLES)
   add_executable(example_robot1 "examples/Robot1/main.cpp")
 endif()
 
-# Unit Tests
-set(TESTS
-    # EKF
-    test/ExtendedKalmanFilter.cpp
-    
-    # UKF
-    test/UnscentedKalmanFilterBase.cpp
-    test/UnscentedKalmanFilter.cpp
-    test/SquareRootUnscentedKalmanFilter.cpp
-    
-    # Utils
-    test/StandardBase.cpp
-    test/SquareRootBase.cpp
-    test/Matrix.cpp
-)
 
-if(BUILD_TESTING)
+if(KALMAN_BUILD_TESTING)
+  # Unit Tests
+  set(TESTS
+      # EKF
+      test/ExtendedKalmanFilter.cpp
+
+      # UKF
+      test/UnscentedKalmanFilterBase.cpp
+      test/UnscentedKalmanFilter.cpp
+      test/SquareRootUnscentedKalmanFilter.cpp
+
+      # Utils
+      test/StandardBase.cpp
+      test/SquareRootBase.cpp
+      test/Matrix.cpp
+  )
+  include(CTest)
   enable_testing()
   add_subdirectory("external/googletest")
   include_directories("external/googletest/include")
