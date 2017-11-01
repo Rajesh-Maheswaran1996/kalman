@@ -1,5 +1,14 @@
 cmake_minimum_required(VERSION 2.8)
-project(Kalman CXX)
+project(kalman CXX)
+
+# add catkin for ROS pipeline
+find_package(catkin)
+
+catkin_package(
+  INCLUDE_DIRS include
+)
+
+
 
 # TODO: Use VERSION argument to project command after raising the minimum
 # cmake version to 3.0
@@ -106,12 +115,18 @@ write_basic_package_version_file(
   COMPATIBILITY SameMajorVersion)
 
 # Install targets
-install(DIRECTORY include/kalman DESTINATION include)
 install(FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UseKalman.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/KalmanConfig.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/KalmanConfigVersion.cmake
   DESTINATION ${KALMAN_CONFIG_CMAKE_PATH})
+
+# add header files to ros
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.hpp"
+  PATTERN ".svn" EXCLUDE
+)
 
 # Add uninstall target
 add_custom_target(uninstall COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/KalmanUninstall.cmake)
